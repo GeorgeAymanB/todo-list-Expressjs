@@ -2,7 +2,8 @@
 ## Before running the app
 - Download nodeJS 
 - In your code editor open the project directory --> open a terminal --> run the following commands
-  npm init -y
+
+   npm init -y
   
   npm install express
   
