@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List App</title>
+</head>
+<body>
+    <div class="container">
+        <h2>To-do List</h2>
+        <form action="/add" method="post">
+        <input type="text" id="newTask" name="task" placeholder="Enter a new task">
+        <button type="submit" id="addTask">Add Task</button>
+        </form>
+        <ol id="taskList"></ol>
+        <button type="submit" id="clear">Clear</button>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const liElements = document.querySelectorAll('li'); // Select all <li> elements
+    
+    liElements.forEach(function(liElement) {
+        const textContent = liElement.textContent;
+        
+        const updatedText = textContent.replace(/\(DONE\)/g, ''); // Remove all occurrences of "(DONE)"
+        liElement.textContent = updatedText;
+    });
+});
+
+document.getElementById('clear').addEventListener('click', async () => {
+            const response = await fetch('/clear', { method: 'DELETE' });
+            if (response.ok) {
+                alert('Tasks cleared successfully!');
+                location.reload();
+            } else {
+                alert('An error occurred while clearing tasks.');
+            }
+        });
+
+        // JavaScript code to toggle "done" status and style when li element is clicked
+        const taskList = document.getElementById("taskList");
+    
+        taskList.addEventListener("click", function(event) {
+    const clickedElement = event.target;
+    if (clickedElement.tagName === "LI") {
+        const originalText = clickedElement.textContent;
+        console.log("Original Text:", originalText);
+
+        if (!originalText.includes("(DONE)")) {
+            const newText = originalText + " (DONE)";
+            console.log("New Text:", newText);
+            //changes
+              clickedElement.id='DONEtask';
+            //changes
+
+            fetch('/update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ originalText, newText })
+            })
+            .then(response => {
+                if (response.ok) {
+                    clickedElement.textContent = newText;
+                    clickedElement.classList.add("done-task");
+                } else {
+                    console.error('Error updating task on the server');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    }
+});
+
+
+    </script>
+</body>
+</html>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("wallpaper.jpg");
+}
+
+.container {
+    background-color: rgb(237, 228, 217);
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h2 {
+    font-family: cursive;
+    color: rgb(128, 25, 9);
+}
+
+li {
+    width: fit-content;
+    cursor: pointer;
+    font-family: Calibri;
+    font-size: larger;
+}
+
+li:hover {
+    color: blue;
+}
+
+.done-task {
+    text-decoration: line-through;
+    color: green;
+}
+</style>
