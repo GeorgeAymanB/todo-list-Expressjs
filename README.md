@@ -1,4 +1,4 @@
-# Basic todo list web app made using NodeJS.
+# Basic todo list web app made using ExpressJS.
 ## Before running the app
 - Download nodeJS 
 - In your code editor open the project directory --> open a terminal --> run the following commands
